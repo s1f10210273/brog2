@@ -1,6 +1,7 @@
 "use client";
 import useUser from "@/hooks/useUser";
 import { SubmitHandler, useForm } from "react-hook-form";
+import FullScreenLoader from "@/components/FullScreenLoader";
 
 const Login = () => {
   const {
@@ -22,6 +23,7 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-screen">
+      <FullScreenLoader loading={loading} />
       <form onSubmit={handleSubmit(doLogin)} className="w-full max-w-md">
         <div className="mb-4">
           <input
