@@ -26,14 +26,8 @@ const AddPostPage = () => {
         <div className="mb-4">
           <input
             id="title"
-            type="text"
             placeholder="タイトル"
-            {...register("title", {
-              required: {
-                value: true,
-                message: "タイトルを入力してください",
-              },
-            })}
+            {...register("title")}
             className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
           />
           {errors.title && (
@@ -44,14 +38,8 @@ const AddPostPage = () => {
         <div className="mb-4">
           <input
             id="content"
-            type="text"
             placeholder="内容"
-            {...register("content", {
-              required: {
-                value: true,
-                message: "内容を入力してください",
-              },
-            })}
+            {...register("content")}
             className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
           />
           {errors.content && (

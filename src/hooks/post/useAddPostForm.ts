@@ -1,24 +1,20 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
-
-interface PostFormData {
-  title: string;
-  content: string;
-  authorId: number;
-}
+import { postSchema, postSchemaType } from "@/schemas/post/postSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const useAddPostForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<PostFormData>({
+  } = useForm<postSchemaType>({
     defaultValues: {
       title: "",
       content: "",
-      authorId: 0,
     },
+    resolver: zodResolver(postSchema),
   });
 
   const router = useRouter();
@@ -27,7 +23,6 @@ const useAddPostForm = () => {
   const onSubmit: SubmitHandler<{
     title: string;
     content: string;
-    authorId: number;
   }> = async (data) => {
     try {
       const res = await fetch("/api/post/", {
