@@ -1,6 +1,7 @@
 "use client";
 import useUser from "@/hooks/useUser";
 import { PostType } from "@/types/post";
+import Link from "next/link"; // Linkコンポーネントをインポート
 
 const AddPostPage = () => {
   const { session, user } = useUser();
@@ -25,6 +26,14 @@ const AddPostPage = () => {
           <div key={index} className="border-b border-gray-200 py-4">
             <p className="text-lg font-semibold">{p.title}</p>
             <p className="text-gray-600">{p.content}</p>
+
+            {/* 編集ページへのリンク */}
+            <Link
+              href={`/post/${p.id}`}
+              className="text-blue-500 hover:underline mt-2 inline-block"
+            >
+              編集
+            </Link>
           </div>
         ))
       ) : (

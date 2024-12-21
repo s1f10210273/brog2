@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { PostType } from "@/types/post";
 
 // 1. **Create a Post (POST)** - for creating a new post
 export const useCreatePost = () => {
@@ -16,16 +17,12 @@ export const useCreatePost = () => {
 };
 
 // 2. **Edit a Post (PUT)** - for updating an existing post
-export const useEditPost = () => {
+export const useEditPost = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: {
-      id: string;
-      title: string;
-      content: string;
-      authorId: number;
-    }) => axios.put(`/api/post/${data.id}`, data), // Sends a PUT request to update an existing post
+    mutationFn: (data: { title: string; content: string; authorId: number }) =>
+      axios.put(`/api/post/${id}`, data), // Sends a PUT request to update an existing post
     onSuccess: () => {
       // Invalidate the "todos" query after a successful post update
       queryClient.invalidateQueries({ queryKey: ["todos"] });
@@ -34,11 +31,11 @@ export const useEditPost = () => {
 };
 
 // 3. **Delete a Post (DELETE)** - for deleting a post
-export const useDeletePost = () => {
+export const useDeletePost = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => axios.delete(`/api/post/${id}`), // Sends a DELETE request to remove the post
+    mutationFn: () => axios.delete(`/api/post/${id}`), // Sends a DELETE request to remove the post
     onSuccess: () => {
       // Invalidate the "todos" query after a successful delete
       queryClient.invalidateQueries({ queryKey: ["todos"] });
@@ -55,8 +52,8 @@ export const useGetPosts = () => {
 };
 
 // 5. **Get a Single Post (GET) by ID**
-export const useGetPost = (id: string) => {
-  return useQuery({
+export const useGetPost = (id: number) => {
+  return useQuery<PostType, Error>({
     queryKey: ["post", id], // The query key to fetch a single post, including its ID
     queryFn: () => axios.get(`/api/post/${id}`).then((res) => res.data.post), // Fetch post by ID
     enabled: !!id, // Ensures the query is only run when `id` is available
