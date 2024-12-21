@@ -1,12 +1,19 @@
 "use client";
 import useUser from "@/hooks/useUser";
 import useAddPostForm from "@/hooks/post/useAddPostForm";
+import FullScreenLoader from "@/components/FullScreenLoader";
 
 const AddPostPage = () => {
-  const { session } = useUser();
+  const { session, loading: userLoading } = useUser();
 
-  const { register, handleSubmit, errors } = useAddPostForm();
+  const {
+    register,
+    handleSubmit,
+    errors,
+    loading: postLoading,
+  } = useAddPostForm();
 
+  const loading = userLoading || postLoading;
   if (!session)
     return (
       <main className="flex justify-center items-center h-screen">
@@ -20,6 +27,7 @@ const AddPostPage = () => {
 
   return (
     <main className="max-w-md mx-auto p-6">
+      <FullScreenLoader loading={loading} />
       <p className="text-2xl font-bold mb-4">Add Post</p>
 
       <form onSubmit={handleSubmit}>

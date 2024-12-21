@@ -1,10 +1,15 @@
+"use state";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from "react";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
 import { postSchema, postSchemaType } from "@/schemas/post/postSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import toast from "react-hot-toast";
 
 const useAddPostForm = () => {
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -20,11 +25,16 @@ const useAddPostForm = () => {
   const router = useRouter();
   const { user } = useUser();
 
-  const onSubmit: SubmitHandler<{
-    title: string;
-    content: string;
-  }> = async (data) => {
+  const onSubmit: SubmitHandler<{ title: string; content: string }> = async (
+    data
+  ) => {
+    if (!user) {
+      toast.error("User not found");
+      return;
+    }
+
     try {
+      setLoading(true);
       const res = await fetch("/api/post/", {
         cache: "no-store", // ssr
         method: "POST",
@@ -37,10 +47,16 @@ const useAddPostForm = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log(res);
-      router.push("/");
-    } catch (error) {
-      console.error("Error:", error);
+
+      if (!res.ok) {
+        toast.error("Failed to add post");
+      }
+      toast.success("投稿しました");
+      router.push("/post");
+    } catch {
+      toast.error("投稿に失敗しました");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,7 +64,7 @@ const useAddPostForm = () => {
     register,
     handleSubmit: handleSubmit(onSubmit),
     errors,
-    onSubmit,
+    loading,
   };
 };
 
