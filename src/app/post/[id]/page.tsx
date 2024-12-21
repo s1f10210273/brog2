@@ -79,7 +79,7 @@ function EditPostFormMain({ id, post }: { id: string; post: PostType }) {
 export default function EditPostForm() {
   const pathname = usePathname();
   const id = pathname.split("/post/")[1];
-  const { data: post, isLoading } = useGetPost(Number(id));
+  const { data: post, isLoading } = useGetPost(id);
 
   if (isLoading) {
     return <FullScreenLoader loading={true} />;

@@ -31,7 +31,7 @@ export const useEditPost = (id: string) => {
 };
 
 // 3. **Delete a Post (DELETE)** - for deleting a post
-export const useDeletePost = (id: number) => {
+export const useDeletePost = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -52,7 +52,7 @@ export const useGetPosts = () => {
 };
 
 // 5. **Get a Single Post (GET) by ID**
-export const useGetPost = (id: number) => {
+export const useGetPost = (id: string) => {
   return useQuery<PostType, Error>({
     queryKey: ["post", id], // The query key to fetch a single post, including its ID
     queryFn: () => axios.get(`/api/post/${id}`).then((res) => res.data.post), // Fetch post by ID
