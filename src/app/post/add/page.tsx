@@ -1,21 +1,11 @@
 "use client";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler } from "react-hook-form";
+import useAddPostForm from "@/hooks/post/useAddPostForm";
 
 const AddPostPage = () => {
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ title: string; content: string; authorId: number }>({
-    defaultValues: {
-      title: "",
-      content: "",
-      authorId: 0,
-    },
-  });
   const { session, user } = useUser();
 
   const onSubmit: SubmitHandler<{
@@ -42,6 +32,8 @@ const AddPostPage = () => {
       console.error("Error:", error);
     }
   };
+
+  const { register, handleSubmit, errors } = useAddPostForm(onSubmit);
 
   if (!session)
     return (
