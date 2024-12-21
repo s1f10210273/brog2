@@ -1,15 +1,14 @@
 "use state";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useState } from "react";
 import useUser from "@/hooks/useUser";
-import { useRouter } from "next/navigation";
 import { postSchema, postSchemaType } from "@/schemas/post/postSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
+import { QueryClient } from "@tanstack/react-query";
+import { useEditPost } from "./api";
+import { useRouter } from "next/navigation";
 
 const useAddPostForm = () => {
-  const [loading, setLoading] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -21,9 +20,11 @@ const useAddPostForm = () => {
     },
     resolver: zodResolver(postSchema),
   });
-
+  const queryClient = new QueryClient();
   const router = useRouter();
   const { user } = useUser();
+
+  const { mutate, isPending } = useEditPost();
 
   const onSubmit: SubmitHandler<{ title: string; content: string }> = async (
     data
@@ -32,39 +33,26 @@ const useAddPostForm = () => {
       toast.error("User not found");
       return;
     }
-
-    try {
-      setLoading(true);
-      const res = await fetch("/api/post/", {
-        cache: "no-store", // ssr
-        method: "POST",
-        body: JSON.stringify({
-          title: data.title,
-          content: data.content,
-          authorId: user?.id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
+    mutate(
+      { title: data.title, content: data.content, authorId: user.id },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["todos"] });
+          toast.success("投稿しました");
+          router.push("/post");
         },
-      });
-
-      if (!res.ok) {
-        toast.error("Failed to add post");
+        onError: () => {
+          toast.error("投稿に失敗しました");
+        },
       }
-      toast.success("投稿しました");
-      router.push("/post");
-    } catch {
-      toast.error("投稿に失敗しました");
-    } finally {
-      setLoading(false);
-    }
+    );
   };
 
   return {
     register,
     handleSubmit: handleSubmit(onSubmit),
     errors,
-    loading,
+    isPending,
   };
 };
 

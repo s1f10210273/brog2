@@ -6,14 +6,9 @@ import FullScreenLoader from "@/components/FullScreenLoader";
 const AddPostPage = () => {
   const { session, loading: userLoading } = useUser();
 
-  const {
-    register,
-    handleSubmit,
-    errors,
-    loading: postLoading,
-  } = useAddPostForm();
+  const { register, handleSubmit, errors, isPending } = useAddPostForm();
 
-  const loading = userLoading || postLoading;
+  const loading = userLoading || isPending;
   if (!session)
     return (
       <main className="flex justify-center items-center h-screen">
