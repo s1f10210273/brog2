@@ -1,39 +1,11 @@
 "use client";
 import useUser from "@/hooks/useUser";
-import { useRouter } from "next/navigation";
-import { SubmitHandler } from "react-hook-form";
 import useAddPostForm from "@/hooks/post/useAddPostForm";
 
 const AddPostPage = () => {
-  const router = useRouter();
-  const { session, user } = useUser();
+  const { session } = useUser();
 
-  const onSubmit: SubmitHandler<{
-    title: string;
-    content: string;
-    authorId: number;
-  }> = async (data) => {
-    try {
-      const res = await fetch("/api/post/", {
-        cache: "no-store", // ssr
-        method: "POST",
-        body: JSON.stringify({
-          title: data.title,
-          content: data.content,
-          authorId: user?.id,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(res);
-      router.push("/");
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const { register, handleSubmit, errors } = useAddPostForm(onSubmit);
+  const { register, handleSubmit, errors } = useAddPostForm();
 
   if (!session)
     return (
@@ -50,7 +22,7 @@ const AddPostPage = () => {
     <main className="max-w-md mx-auto p-6">
       <p className="text-2xl font-bold mb-4">Add Post</p>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <input
             id="title"

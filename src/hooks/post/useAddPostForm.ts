@@ -1,5 +1,6 @@
-// hooks/useAddPostForm.ts
 import { useForm, SubmitHandler } from "react-hook-form";
+import useUser from "@/hooks/useUser";
+import { useRouter } from "next/navigation";
 
 interface PostFormData {
   title: string;
@@ -7,7 +8,7 @@ interface PostFormData {
   authorId: number;
 }
 
-const useAddPostForm = (onSubmit: SubmitHandler<PostFormData>) => {
+const useAddPostForm = () => {
   const {
     register,
     handleSubmit,
@@ -20,9 +21,37 @@ const useAddPostForm = (onSubmit: SubmitHandler<PostFormData>) => {
     },
   });
 
+  const router = useRouter();
+  const { user } = useUser();
+
+  const onSubmit: SubmitHandler<{
+    title: string;
+    content: string;
+    authorId: number;
+  }> = async (data) => {
+    try {
+      const res = await fetch("/api/post/", {
+        cache: "no-store", // ssr
+        method: "POST",
+        body: JSON.stringify({
+          title: data.title,
+          content: data.content,
+          authorId: user?.id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(res);
+      router.push("/");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return {
     register,
-    handleSubmit,
+    handleSubmit: handleSubmit(onSubmit),
     errors,
     onSubmit,
   };
