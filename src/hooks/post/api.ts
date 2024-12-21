@@ -25,7 +25,7 @@ export const useEditPost = (id: string) => {
       axios.put(`/api/post/${id}`, data), // Sends a PUT request to update an existing post
     onSuccess: () => {
       // Invalidate the "todos" query after a successful post update
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: ["post", id] });
     },
   });
 };
@@ -35,10 +35,10 @@ export const useDeletePost = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => axios.delete(`/api/post/${id}`), // Sends a DELETE request to remove the post
+    mutationFn: (id: string) => axios.delete(`/api/post/${id}`), // Sends a DELETE request to remove the post
     onSuccess: () => {
       // Invalidate the "todos" query after a successful delete
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: ["post", id] });
     },
   });
 };
