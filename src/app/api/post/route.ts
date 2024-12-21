@@ -29,19 +29,6 @@ export const POST = async (req: Request) => {
   }
 };
 
-// GET (Get all posts)
-export const GET = async () => {
-  try {
-    await doConnect();
-    const posts = await prisma.post.findMany(); // Fetch all posts
-    return NextResponse.json({ posts }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  } finally {
-    await prisma.$disconnect();
-  }
-};
-
 // PUT (Update a post)
 export const PUT = async (req: Request) => {
   try {
@@ -93,5 +80,34 @@ export const DELETE = async (req: Request) => {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   } finally {
     await prisma.$disconnect();
+  }
+};
+
+export const GET = async (req: Request) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = Number(searchParams.get("id"));
+
+    if (!id) {
+      return NextResponse.json(
+        { message: "Post ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const post = await prisma.post.findUnique({
+      where: { id },
+    });
+
+    if (!post) {
+      return NextResponse.json({ message: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ post }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Error fetching post", error },
+      { status: 500 }
+    );
   }
 };

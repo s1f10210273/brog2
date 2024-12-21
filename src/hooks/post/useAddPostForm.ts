@@ -5,7 +5,7 @@ import { postSchema, postSchemaType } from "@/schemas/post/postSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { QueryClient } from "@tanstack/react-query";
-import { useEditPost } from "./api";
+import { useCreatePost } from "@/hooks/post/api";
 import { useRouter } from "next/navigation";
 
 const useAddPostForm = () => {
@@ -24,7 +24,7 @@ const useAddPostForm = () => {
   const router = useRouter();
   const { user } = useUser();
 
-  const { mutate, isPending } = useEditPost();
+  const { mutate, isPending } = useCreatePost();
 
   const onSubmit: SubmitHandler<{ title: string; content: string }> = async (
     data
