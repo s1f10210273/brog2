@@ -1,8 +1,6 @@
 "use client";
-import { useState } from "react";
 import useUser from "@/hooks/useUser";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 const Login = () => {
   const {
@@ -15,17 +13,11 @@ const Login = () => {
       password: "",
     },
   });
-  const { signIn } = useUser();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
+  const { signIn, loading } = useUser();
   const doLogin: SubmitHandler<{ email: string; password: string }> = async (
     formData
   ) => {
-    setLoading(true);
-    await signIn({ email: formData.email, password: formData.password });
-    setLoading(false);
-    router.push("/");
+    signIn({ email: formData.email, password: formData.password });
   };
 
   return (
