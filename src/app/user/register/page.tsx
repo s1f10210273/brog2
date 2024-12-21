@@ -1,45 +1,19 @@
 "use client";
-import useUser from "@/hooks/useUser";
-import { SubmitHandler, useForm } from "react-hook-form";
+import FullScreenLoader from "@/components/FullScreenLoader";
+import useRegisterForm from "@/hooks/user/useRegisterForm";
 
-const Register = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<{ email: string; password: string }>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const { signUp, loading } = useUser();
-
-  const doRegister: SubmitHandler<{ email: string; password: string }> = async (
-    formData
-  ) => {
-    signUp({ email: formData.email, password: formData.password });
-  };
+export default function Register() {
+  const { register, handleSubmit, errors, loading } = useRegisterForm();
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <form onSubmit={handleSubmit(doRegister)} className="w-full max-w-md">
+      <FullScreenLoader loading={loading} />
+      <form onSubmit={handleSubmit} className="w-full max-w-md">
         <div className="mb-4">
           <input
             id="email"
             placeholder="メールアドレス"
-            {...register("email", {
-              required: {
-                value: true,
-                message: "メールアドレスを入力してください",
-              },
-              pattern: {
-                value:
-                  /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]+.[A-Za-z0-9]+$/,
-                message: "有効なメールアドレスを入力してください",
-              },
-            })}
+            {...register("email")}
             className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
           />
           {errors.email && (
@@ -52,16 +26,7 @@ const Register = () => {
             id="password"
             type="password"
             placeholder="パスワード"
-            {...register("password", {
-              required: {
-                value: true,
-                message: "パスワードを入力してください",
-              },
-              minLength: {
-                value: 6,
-                message: "パスワードは6文字以上にしてください",
-              },
-            })}
+            {...register("password")}
             className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
           />
           {errors.password && (
@@ -81,6 +46,4 @@ const Register = () => {
       </form>
     </div>
   );
-};
-
-export default Register;
+}
