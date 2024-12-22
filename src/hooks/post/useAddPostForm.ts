@@ -39,7 +39,7 @@ const useAddPostForm = () => {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["todos"] });
           toast.success("投稿しました");
-          router.push("/post");
+          router.push("/");
         },
         onError: () => {
           toast.error("投稿に失敗しました");

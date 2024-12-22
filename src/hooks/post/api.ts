@@ -11,7 +11,7 @@ export const useCreatePost = () => {
       axios.post("/api/post/", data), // Sends a POST request to create a new post
     onSuccess: () => {
       // Invalidate the "todos" query after a successful post creation
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries({ queryKey: ["post"] });
     },
   });
 };
@@ -25,20 +25,20 @@ export const useEditPost = (id: string) => {
       axios.put(`/api/post/${id}`, data), // Sends a PUT request to update an existing post
     onSuccess: () => {
       // Invalidate the "todos" query after a successful post update
-      queryClient.invalidateQueries({ queryKey: ["post", id] });
+      queryClient.invalidateQueries({ queryKey: ["post"] });
     },
   });
 };
 
 // 3. **Delete a Post (DELETE)** - for deleting a post
-export const useDeletePost = (id: string) => {
+export const useDeletePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: string) => axios.delete(`/api/post/${id}`), // Sends a DELETE request to remove the post
     onSuccess: () => {
       // Invalidate the "todos" query after a successful delete
-      queryClient.invalidateQueries({ queryKey: ["post", id] });
+      queryClient.invalidateQueries({ queryKey: ["post"] });
     },
   });
 };
@@ -46,7 +46,7 @@ export const useDeletePost = (id: string) => {
 // 4. **Get All Posts (GET)** - for fetching all posts
 export const useGetPosts = () => {
   return useQuery({
-    queryKey: ["todos"], // The query key used for caching and invalidation
+    queryKey: ["post"], // The query key used for caching and invalidation
     queryFn: () => axios.get("/api/post/").then((res) => res.data.posts), // Sends a GET request to fetch all posts
   });
 };
@@ -54,7 +54,7 @@ export const useGetPosts = () => {
 // 5. **Get a Single Post (GET) by ID**
 export const useGetPost = (id: string) => {
   return useQuery<PostType, Error>({
-    queryKey: ["post", id], // The query key to fetch a single post, including its ID
+    queryKey: ["post"], // The query key to fetch a single post, including its ID
     queryFn: () => axios.get(`/api/post/${id}`).then((res) => res.data.post), // Fetch post by ID
     enabled: !!id, // Ensures the query is only run when `id` is available
   });

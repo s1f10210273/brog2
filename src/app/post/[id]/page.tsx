@@ -7,6 +7,8 @@ import { useGetPost, useDeletePost } from "@/hooks/post/api";
 import { PostType } from "@/types/post";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { FaArrowLeft } from "react-icons/fa";
+import Link from "next/link";
 
 function EditPostFormMain({ id, post }: { id: string; post: PostType }) {
   const router = useRouter();
@@ -15,20 +17,21 @@ function EditPostFormMain({ id, post }: { id: string; post: PostType }) {
     post
   );
   const { session, loading: userLoading } = useUser();
-  const { mutate: deletePost, isPending: deletePending } = useDeletePost(id);
+  const { mutate: deletePost, isPending: deletePending } = useDeletePost();
   const loading = userLoading || isPending || deletePending;
 
   const handleDelete = () => {
     deletePost(id, {
       onSuccess: () => {
         toast.success("投稿を削除しました");
-        router.push("/post");
+        router.push("/");
       },
       onError: () => {
         toast.error("投稿の削除に失敗しました");
       },
     });
   };
+
   // ログインしていない場合の処理
   if (!session)
     return (
@@ -47,51 +50,83 @@ function EditPostFormMain({ id, post }: { id: string; post: PostType }) {
   }
 
   return (
-    <main className="max-w-md mx-auto p-6">
+    <main className="max-w-2xl mx-auto p-8">
       <FullScreenLoader loading={loading} />
-      <p className="text-2xl font-bold mb-4">Edit Post</p>
+      <p className="text-3xl font-semibold text-center text-gray-800 mb-8">
+        編集
+      </p>
 
-      <div className="mb-4">
+      {/* タイトル入力 */}
+      <div className="mb-6">
+        <label
+          htmlFor="title"
+          className="block text-lg font-medium text-gray-700 mb-2"
+        >
+          タイトル
+        </label>
         <input
           id="title"
-          placeholder="タイトル"
+          placeholder="タイトルを入力"
           {...register("title")}
           defaultValue={post.title}
-          className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
+          className="border border-gray-300 rounded-md px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
         />
         {errors.title && (
-          <div className="text-red-500 text-sm">{errors.title.message}</div>
+          <div className="text-red-500 text-sm mt-1">
+            {errors.title.message}
+          </div>
         )}
       </div>
 
-      <div className="mb-4">
-        <input
+      {/* 内容入力 */}
+      <div className="mb-6">
+        <label
+          htmlFor="content"
+          className="block text-lg font-medium text-gray-700 mb-2"
+        >
+          内容
+        </label>
+        <textarea
           id="content"
-          placeholder="内容"
+          placeholder="投稿内容を入力"
           {...register("content")}
           defaultValue={post.content}
-          className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
+          rows={6}
+          className="border border-gray-300 rounded-md px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
         />
         {errors.content && (
-          <div className="text-red-500 text-sm">{errors.content.message}</div>
+          <div className="text-red-500 text-sm mt-1">
+            {errors.content.message}
+          </div>
         )}
       </div>
 
-      <button
-        onClick={handleSubmit}
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-500"
-      >
-        保存
-      </button>
+      {/* 保存ボタン */}
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={handleSubmit}
+          type="submit"
+          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 w-full md:w-auto"
+        >
+          保存
+        </button>
 
-      <button
-        onClick={handleDelete}
-        type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-500"
+        {/* 削除ボタン */}
+        <button
+          onClick={handleDelete}
+          type="button"
+          className="bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300 w-full md:w-auto"
+        >
+          削除
+        </button>
+      </div>
+      {/* 左下の元に戻るボタン */}
+      <Link
+        href="/"
+        className="fixed bottom-8 left-8 bg-gray-800 text-white p-4 rounded-full shadow-lg hover:bg-gray-700 transition duration-300"
       >
-        削除
-      </button>
+        <FaArrowLeft className="text-2xl" />
+      </Link>
     </main>
   );
 }

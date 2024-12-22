@@ -124,7 +124,7 @@ export default function useUser() {
     try {
       await supabase.auth.signOut();
       toast.success("Signed out successfully!");
-      router.push("/");
+      router.push("/user/googleLogin");
     } catch (error) {
       toast.error(`Sign Out Error: ${error}`);
     } finally {

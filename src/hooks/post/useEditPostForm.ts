@@ -42,7 +42,7 @@ export function useEditPostForm(id: string, post: PostType) {
       {
         onSuccess: () => {
           toast.success("投稿を編集しました");
-          router.push(`/post`);
+          router.push(`/`);
         },
         onError: () => {
           toast.error("投稿の編集に失敗しました");
