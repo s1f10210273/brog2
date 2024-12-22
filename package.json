@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clear-cache": "rm -rf .next node_modules package-lock.json && npm install",
+    "migrate": "npx prisma migrate dev"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
