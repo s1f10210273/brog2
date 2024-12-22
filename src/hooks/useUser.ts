@@ -12,6 +12,7 @@ export default function useUser() {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  // セッションの変化を監視して状態を更新
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -19,11 +20,13 @@ export default function useUser() {
       }
     );
 
+    // コンポーネントのクリーンアップ時にリスナーを解除
     return () => {
       authListener.subscription.unsubscribe();
     };
   }, []);
 
+  // ユーザー情報をセッションの変更後に取得
   useEffect(() => {
     const setupUser = async () => {
       if (session?.user.id) {
@@ -43,6 +46,7 @@ export default function useUser() {
     }
   }, [session]);
 
+  // サインアップ機能
   async function signUp({
     email,
     password,
@@ -66,6 +70,7 @@ export default function useUser() {
     }
   }
 
+  // サインイン機能
   async function signIn({
     email,
     password,
@@ -92,6 +97,28 @@ export default function useUser() {
     }
   }
 
+  // Googleサインイン機能
+  async function signInWithGoogle() {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+      });
+      if (error) {
+        toast.error(`Google Sign In Error: ${error.message}`);
+      } else {
+        // サインインが成功した後のリダイレクト
+        toast.success("Google Sign In successful!");
+        router.push("/"); // 例：ホームページにリダイレクト
+      }
+    } catch (error) {
+      toast.error(`Google Sign In Error: ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // サインアウト機能
   async function signOut() {
     setLoading(true);
     try {
@@ -105,5 +132,5 @@ export default function useUser() {
     }
   }
 
-  return { session, user, loading, signUp, signIn, signOut };
+  return { session, user, loading, signUp, signIn, signOut, signInWithGoogle };
 }
