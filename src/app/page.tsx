@@ -1,6 +1,7 @@
 "use client";
 import useUser from "@/hooks/useUser";
 import FullScreenLoader from "@/components/FullScreenLoader";
+import Link from "next/link";
 
 export default function Home() {
   const { session, user, signOut, signInWithGoogle, loading } = useUser();
@@ -15,14 +16,14 @@ export default function Home() {
           <div>
             <p className="mb-2">ログイン中です {user?.email}</p>
             <div className="mb-2">
-              <a href="/post" className="text-blue-500 hover:underline">
+              <Link href="/post" className="text-blue-500 hover:underline">
                 post一覧
-              </a>
+              </Link>
             </div>
             <div className="mb-2">
-              <a href="/post/add" className="text-blue-500 hover:underline">
+              <Link href="/post/add" className="text-blue-500 hover:underline">
                 post追加
-              </a>
+              </Link>
             </div>
             <button
               onClick={() => signOut()}
