@@ -20,7 +20,7 @@ export default function Home() {
       {/* 投稿一覧セクション */}
       {user && (
         <section className="w-full max-w-3xl mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             {user?.posts.length !== 0 ? (
               user?.posts.map((p: PostType, index: number) => (
                 <div

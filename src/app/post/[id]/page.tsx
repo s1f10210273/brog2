@@ -106,7 +106,7 @@ function EditPostFormMain({ id, post }: { id: string; post: PostType }) {
         <button
           onClick={handleSubmit}
           type="submit"
-          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 w-full md:w-auto"
+          className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 w-full"
         >
           保存
         </button>
@@ -115,7 +115,7 @@ function EditPostFormMain({ id, post }: { id: string; post: PostType }) {
         <button
           onClick={handleDelete}
           type="button"
-          className="bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300 w-full md:w-auto"
+          className="bg-red-500 text-white px-6 py-3 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300 w-full"
         >
           削除
         </button>

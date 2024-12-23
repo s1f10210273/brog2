@@ -74,7 +74,7 @@ const AddPostPage = () => {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="w-full md:w-auto bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+                className="w-full bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
               >
                 投稿する
               </button>
