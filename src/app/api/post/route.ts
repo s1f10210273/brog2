@@ -1,23 +1,21 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
-
-// Connect to DB
-export async function doConnect() {
-  try {
-    await prisma.$connect();
-  } catch {
-    return Error("DB接続に失敗しました");
-  }
-}
+const prisma = new PrismaClient();
 
 // POST (Create a new post)
 export const POST = async (req: Request) => {
   try {
     const { title, content, authorId } = await req.json();
 
-    await doConnect();
+    try {
+      await prisma.$connect();
+    } catch {
+      return NextResponse.json(
+        { message: "DB connection Error" },
+        { status: 500 }
+      );
+    }
     const post = await prisma.post.create({
       data: { title, content, authorId },
     });

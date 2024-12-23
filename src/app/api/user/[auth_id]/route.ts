@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
-export async function doConnect() {
-  try {
-    await prisma.$connect();
-  } catch {
-    return Error("DB接続に失敗しました");
-  }
-}
+const prisma = new PrismaClient();
+
 export const GET = async (req: Request) => {
   const auth_id: string = req.url.split("/user/")[1];
   console.log(auth_id);
 
   try {
-    await doConnect();
+    try {
+      await prisma.$connect();
+    } catch {
+      return NextResponse.json(
+        { message: "DB connection Error" },
+        { status: 500 }
+      );
+    }
     const user = await prisma.user.findUnique({
       where: { auth_id },
       include: {

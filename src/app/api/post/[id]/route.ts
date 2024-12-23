@@ -1,16 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
-
-// Connect to DB
-export async function doConnect() {
-  try {
-    await prisma.$connect();
-  } catch {
-    return Error("DB接続に失敗しました");
-  }
-}
+const prisma = new PrismaClient();
 
 // PUT (Update a post)
 export const PUT = async (req: Request) => {
@@ -18,7 +9,15 @@ export const PUT = async (req: Request) => {
     const id = Number(req.url.split("/post/")[1]);
     const { title, content, authorId } = await req.json();
 
-    await doConnect();
+    try {
+      await prisma.$connect();
+    } catch {
+      return NextResponse.json(
+        { message: "DB connection Error" },
+        { status: 500 }
+      );
+    }
+
     const existingPost = await prisma.post.findUnique({ where: { id } });
 
     if (!existingPost) {
@@ -46,7 +45,15 @@ export const DELETE = async (req: Request) => {
   try {
     const id = Number(req.url.split("/post/")[1]);
 
-    await doConnect();
+    try {
+      await prisma.$connect();
+    } catch {
+      return NextResponse.json(
+        { message: "DB connection Error" },
+        { status: 500 }
+      );
+    }
+
     const existingPost = await prisma.post.findUnique({
       where: { id },
     });
@@ -78,8 +85,14 @@ export const GET = async (req: Request) => {
       );
     }
 
-    await prisma.$connect();
-
+    try {
+      await prisma.$connect();
+    } catch {
+      return NextResponse.json(
+        { message: "DB connection Error" },
+        { status: 500 }
+      );
+    }
     const post = await prisma.post.findUnique({
       where: { id },
     });
