@@ -7,7 +7,7 @@ export const userSchema = z.object({
     .nonempty("メールアドレスを入力してください"),
   password: z
     .string()
-    .min(6, "パスワードは6文字以上にしてください")
+    .min(6, "パスワードは6文字以上にしてください.")
     .nonempty("パスワードを入力してください"),
 });
 
